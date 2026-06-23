@@ -1,4 +1,9 @@
-### Step 1 — Start up
+### Step 1 — Set Up
+```bash
+cd zedfund-package
+npm install
+```
+### Step 1 — Run web app
 ```bash
 cd zedfund-package
 npm start
