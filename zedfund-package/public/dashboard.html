@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — ZedFund</title>
+<link rel="icon" href="images/logo.png">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div id="navbar-root"></div>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div style="flex:1;">
+      <div class="sidebar-link active">📊 Dashboard</div>
+      <div class="sidebar-link" id="link-campaigns" style="display:none;">📣 My Campaigns</div>
+      <div class="sidebar-link" id="link-donations" style="display:none;">🤝 Donations</div>
+    </div>
+  </aside>
+
+  <main class="app-main" id="page-root">
+    <div class="skeleton" style="height:120px; margin-bottom: var(--space-md);"></div>
+    <div class="skeleton" style="height:300px;"></div>
+  </main>
+</div>
+
+<div id="footer-root"></div>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script>
+  renderNavbar();
+  renderFooter();
+  if (!requireLoginOrRedirect()) { /* redirected */ }
+
+  const root = document.getElementById('page-root');
+  const PROVIDER_LABELS = { mtn: 'MTN Mobile Money', airtel: 'Airtel Money', zamtel: 'Zamtel Kwacha' };
+
+  function statusPill(status) {
+    return `<span class="status-pill status-${status}">${status}</span>`;
+  }
+
+  function transactionRow(t) {
+    const idLabel = t.kind === 'donation' ? (t.campaignTitle || 'Donation') : 'Withdrawal';
+    return `
+      <tr>
+        <td>${escapeHtml(idLabel)}</td>
+        <td>${new Date(t.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+        <td class="mono">${money(t.amount)}</td>
+        <td>${statusPill(t.status)}</td>
+      </tr>
+    `;
+  }
+
+  function campaignManageCard(c) {
+    const percent = pct(c.raised, c.goal);
+    return `
+      <div class="card campaign-card">
+        <div class="campaign-card-media">
+          <img src="${c.image}" alt="${escapeHtml(c.title)}">
+          <span class="badge badge-deadline">${c.status === 'verified' ? 'Active' : c.status}</span>
+        </div>
+        <div class="campaign-card-body">
+          <div class="campaign-card-title">${escapeHtml(c.title)}</div>
+          <div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div>
+          <div class="campaign-card-amounts">
+            <span>${percent}% Funded</span>
+            <span>${money(c.raised)} / ${money(c.goal)}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="label-sm text-muted">${c.deadlineDays} days left</span>
+            <a href="campaign-detail.html?id=${c.id}" class="view-all-link body-md">Manage →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  async function renderOrganizerView(data, user) {
+    document.getElementById('link-campaigns').style.display = 'flex';
+    const available = data.stats.available;
+    root.innerHTML = `
+      <h1 class="headline-lg" style="margin-bottom: var(--space-md);">Welcome back, ${escapeHtml(user.name.split(' ')[0])}</h1>
+
+      <div class="grid grid-3" style="margin-bottom: var(--space-lg);">
+        <div class="card card-pad stat-card">
+          <span class="stat-label">Total Raised</span>
+          <span class="stat-value">${money(data.stats.totalRaised)}</span>
+        </div>
+        <div class="card card-pad stat-card">
+          <span class="stat-label">Active Campaigns</span>
+          <span class="stat-value">${data.stats.activeCampaigns} Projects</span>
+        </div>
+        <div class="wallet-card stat-card">
+          <span class="stat-label">Available to Withdraw</span>
+          <span class="stat-value">${money(available)}</span>
+          <span class="label-sm">${data.momoProvider ? PROVIDER_LABELS[data.momoProvider] + ' Verified' : 'No mobile money linked'}</span>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: 2fr 1fr; align-items:start;">
+        <div class="card card-pad">
+          <div class="flex justify-between items-center" style="margin-bottom:10px;">
+            <strong class="headline-md">Recent Transactions</strong>
+          </div>
+          ${data.transactions.length ? `
+            <table class="data-table">
+              <thead><tr><th>Description</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody>${data.transactions.map(transactionRow).join('')}</tbody>
+            </table>
+          ` : '<p class="text-muted body-md">No transactions yet.</p>'}
+        </div>
+
+        <div class="card card-pad" id="withdraw-card">
+          <strong class="headline-md">Withdraw Funds</strong>
+          <p class="body-md text-muted" style="margin: 6px 0 var(--space-sm);">Connect your MTN or Airtel account to withdraw funds instantly.</p>
+          <div class="momo-account-row ${data.momoProvider === 'mtn' ? 'connected' : ''}">
+            <span>🟡 MTN Mobile Money</span><span>${data.momoProvider === 'mtn' ? '✓' : '+'}</span>
+          </div>
+          <div class="momo-account-row ${data.momoProvider === 'airtel' ? 'connected' : ''}">
+            <span>🔴 Airtel Money</span><span>${data.momoProvider === 'airtel' ? '✓' : '+'}</span>
+          </div>
+          <div class="momo-account-row ${data.momoProvider === 'zamtel' ? 'connected' : ''}">
+            <span>🟢 Zamtel Kwacha</span><span>${data.momoProvider === 'zamtel' ? '✓' : '+'}</span>
+          </div>
+          <div id="withdraw-alert"></div>
+          <div class="field">
+            <label>Amount to withdraw (ZMW)</label>
+            <input type="number" id="withdraw-amount" max="${available}" placeholder="Up to ${money(available)}">
+          </div>
+          <button class="btn btn-primary btn-block" id="withdraw-btn" ${available <= 0 ? 'disabled' : ''}>Proceed to Withdrawal</button>
+        </div>
+      </div>
+
+      <div class="section-head" style="margin-top: var(--space-xl);">
+        <h2 class="headline-lg">Your Campaigns</h2>
+        <a href="create-campaign.html" class="btn btn-action btn-sm">+ Start New Campaign</a>
+      </div>
+      <div class="grid grid-3" id="organizer-campaigns">
+        ${data.campaigns.length ? data.campaigns.map(campaignManageCard).join('') : '<p class="text-muted body-md">You haven\'t started a campaign yet.</p>'}
+      </div>
+    `;
+
+    document.getElementById('withdraw-btn').addEventListener('click', async () => {
+      const alertBox = document.getElementById('withdraw-alert');
+      const amount = Number(document.getElementById('withdraw-amount').value);
+      const provider = data.momoProvider || 'mtn';
+      alertBox.innerHTML = '';
+      if (!amount || amount <= 0) {
+        alertBox.innerHTML = `<div class="alert alert-error">Enter an amount to withdraw.</div>`;
+        return;
+      }
+      if (!data.momoNumber) {
+        alertBox.innerHTML = `<div class="alert alert-error">Link a mobile money number in Settings before withdrawing.</div>`;
+        return;
+      }
+      try {
+        const res = await api('/users/withdraw', { method: 'POST', body: { amount, provider, phone: data.momoNumber } });
+        alertBox.innerHTML = `<div class="alert alert-success">${escapeHtml(res.message)}</div>`;
+        setTimeout(load, 1200);
+      } catch (err) {
+        alertBox.innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+      }
+    });
+  }
+
+  function renderDonorView(data, user) {
+    document.getElementById('link-donations').style.display = 'flex';
+    root.innerHTML = `
+      <h1 class="headline-lg" style="margin-bottom: var(--space-md);">Welcome back, ${escapeHtml(user.name.split(' ')[0])}</h1>
+
+      <div class="grid grid-3" style="margin-bottom: var(--space-lg);">
+        <div class="card card-pad stat-card">
+          <span class="stat-label">Total Donated</span>
+          <span class="stat-value">${money(data.stats.totalDonated)}</span>
+        </div>
+        <div class="card card-pad stat-card">
+          <span class="stat-label">Campaigns Supported</span>
+          <span class="stat-value">${data.stats.activeCampaigns}</span>
+        </div>
+        <div class="wallet-card stat-card">
+          <span class="stat-label">Mobile Money</span>
+          <span class="stat-value" style="font-size:20px;">${data.momoProvider ? PROVIDER_LABELS[data.momoProvider] : 'Not linked'}</span>
+          <span class="label-sm">${data.momoNumber || 'Add a number in Settings'}</span>
+        </div>
+      </div>
+
+      <div class="card card-pad">
+        <strong class="headline-md">Your Donations</strong>
+        <div style="margin-top:10px;">
+          ${data.transactions.length ? `
+            <table class="data-table">
+              <thead><tr><th>Campaign</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody>${data.transactions.map(transactionRow).join('')}</tbody>
+            </table>
+          ` : '<div class="empty-state">You haven\'t donated yet. <a href="discover.html" class="text-primary">Browse campaigns →</a></div>'}
+        </div>
+      </div>
+    `;
+  }
+
+  async function load() {
+    const user = getUser();
+    try {
+      const data = await api('/users/dashboard');
+      if (data.role === 'organizer' || data.role === 'admin') {
+        renderOrganizerView(data, user);
+      } else {
+        renderDonorView(data, user);
+      }
+    } catch (err) {
+      root.innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  if (isLoggedIn()) load();
+</script>
+</body>
+</html>

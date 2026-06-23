@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campaign — ZedFund</title>
+<link rel="icon" href="images/logo.png">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div id="navbar-root"></div>
+
+<main class="container section" id="page-root">
+  <div class="skeleton" style="height:380px; border-radius: var(--radius-lg); margin-bottom: var(--space-md);"></div>
+  <div class="skeleton" style="height:200px;"></div>
+</main>
+
+<div id="footer-root"></div>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/mobilemoney.js"></script>
+<script>
+  renderNavbar('discover');
+  renderFooter();
+
+  const campaignId = new URLSearchParams(window.location.search).get('id');
+  const root = document.getElementById('page-root');
+
+  function donorRowHtml(d) {
+    return `
+      <div class="list-row">
+        <div class="donor-meta">
+          <div class="donor-avatar">${initials(d.donorName)}</div>
+          <div>
+            <div class="body-md" style="font-weight:600;">${escapeHtml(d.donorName)}</div>
+            <div class="label-sm text-muted">${timeAgo(d.createdAt)}</div>
+          </div>
+        </div>
+        <strong class="mono">${money(d.amount)}</strong>
+      </div>
+    `;
+  }
+
+  function timeAgo(iso) {
+    const diffMs = Date.now() - new Date(iso).getTime();
+    const hrs = Math.floor(diffMs / 3600000);
+    if (hrs < 1) return 'Just now';
+    if (hrs < 24) return `${hrs} hr${hrs > 1 ? 's' : ''} ago`;
+    return `${Math.floor(hrs / 24)} day${Math.floor(hrs / 24) > 1 ? 's' : ''} ago`;
+  }
+
+  function updateHtml(u) {
+    const d = new Date(u.date);
+    const day = d.getDate();
+    const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+    return `
+      <div class="update-item">
+        <div class="update-date">${month}<br>${day}</div>
+        <div>
+          <strong class="body-md">${escapeHtml(u.title)}</strong>
+          <p class="body-md text-muted">${escapeHtml(u.body)}</p>
+        </div>
+      </div>
+    `;
+  }
+
+  async function load() {
+    if (!campaignId) {
+      root.innerHTML = `<div class="empty-state">No campaign specified. <a href="discover.html" class="text-primary">Browse campaigns →</a></div>`;
+      return;
+    }
+    try {
+      const { campaign: c, donations, donorCount } = await api(`/campaigns/${campaignId}`);
+      document.title = `${c.title} — ZedFund`;
+      const percent = pct(c.raised, c.goal);
+
+      root.innerHTML = `
+        <div class="campaign-hero">
+          <img src="${c.image}" alt="${escapeHtml(c.title)}">
+          <div class="campaign-hero-overlay">
+            <span class="badge">✓ SEC Regulated Project</span>
+            <h1 class="display-md">${escapeHtml(c.title)}</h1>
+            <p class="body-lg">${escapeHtml(c.summary)}</p>
+          </div>
+        </div>
+
+        <div class="card organizer-row">
+          <div class="organizer-info">
+            <div class="avatar">${initials(c.organizerName)}</div>
+            <div>
+              <div class="label-sm text-muted">Campaign Organizer</div>
+              <strong class="body-md">${escapeHtml(c.organizerName)} ${c.verifiedOrganizer ? '<span class="verified-tick">✓</span> Verified Identity' : ''}</strong>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm">Contact</button>
+        </div>
+
+        <div class="campaign-detail-grid">
+          <div>
+            <h2 class="headline-md" style="border-left: 3px solid var(--primary); padding-left: 12px; margin-bottom: var(--space-sm);">The Mission</h2>
+            <p class="body-md" style="margin-bottom: var(--space-sm);">${escapeHtml(c.mission)}</p>
+            ${c.quote ? `<div class="quote-block body-md">“${escapeHtml(c.quote)}”</div>` : ''}
+
+            <div class="trust-box">
+              <div class="flex items-center gap-sm" style="margin-bottom:10px;">
+                <div class="step-icon green" style="width:40px;height:40px;font-size:16px;">🛡️</div>
+                <div>
+                  <strong class="body-md">Trust &amp; Regulation</strong>
+                  <div class="label-sm text-muted">Zambian SEC Regulated Withdrawal Process</div>
+                </div>
+              </div>
+              <p class="body-md text-muted">ZedFund operates under the strict oversight of the SEC Zambia. To ensure total transparency:</p>
+              <ul style="margin: 8px 0 0 18px; list-style: disc; color: var(--on-surface-variant);">
+                <li>Funds are released in tranches based on verified project milestones.</li>
+                <li>Mobile Money withdrawals (MTN, Airtel, Zamtel) are logged and audited.</li>
+                <li>Quarterly impact reports are mandatory for this campaign level.</li>
+              </ul>
+            </div>
+
+            <h2 class="headline-md" style="margin: var(--space-lg) 0 var(--space-sm);">Latest Updates</h2>
+            <div id="updates-list">
+              ${c.updates && c.updates.length ? c.updates.map(updateHtml).join('') : '<p class="text-muted body-md">No updates yet.</p>'}
+            </div>
+          </div>
+
+          <aside class="card card-pad card-floating donate-sidebar">
+            <div class="donate-amount-row">
+              <span class="amount-raised">${money(c.raised)}</span>
+              <span class="label-sm text-muted">${money(c.goal)} goal</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div>
+            <div class="donate-meta-row">
+              <span>${percent}% funded</span>
+              <span>${c.deadlineDays} days left</span>
+            </div>
+            <button class="btn btn-action btn-block" id="donate-btn">Donate Now</button>
+            <div class="flex gap-sm" style="margin-top:10px;">
+              <button class="btn btn-ghost btn-block btn-sm" id="share-btn">↗ Share</button>
+              <button class="btn btn-ghost btn-block btn-sm">♡ ${128 + donorCount}</button>
+            </div>
+            <div class="gateway-row">
+              <span>Supported via Zambia Gateway:</span> <strong>MTN · Airtel · Zamtel</strong>
+            </div>
+
+            <div style="margin-top: var(--space-md); padding-top: var(--space-md); border-top: 1px solid var(--surface-container-high);">
+              <strong class="body-md">Recent Contributions</strong>
+              <div id="donor-list" style="margin-top:8px;">
+                ${donations.length ? donations.slice(0, 5).map(donorRowHtml).join('') : '<p class="label-sm text-muted">Be the first to donate.</p>'}
+              </div>
+              ${donations.length > 5 ? `<a href="#" class="view-all-link body-md" style="display:block; text-align:center; margin-top:8px;">View all ${donorCount} donors</a>` : ''}
+            </div>
+          </aside>
+        </div>
+      `;
+
+      document.getElementById('donate-btn').addEventListener('click', () => {
+        openDonationModal(c, (amount) => {
+          c.raised += amount;
+          load();
+        });
+      });
+      document.getElementById('share-btn').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          alert('Link copied to clipboard!');
+        } catch (e) { /* ignore */ }
+      });
+    } catch (err) {
+      root.innerHTML = `<div class="empty-state">Couldn't load this campaign: ${escapeHtml(err.message)} <br><a href="discover.html" class="text-primary">← Back to Discover</a></div>`;
+    }
+  }
+
+  load();
+</script>
+</body>
+</html>

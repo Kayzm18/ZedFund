@@ -1,0 +1,311 @@
+{
+  "users": [
+    {
+      "id": "u-admin",
+      "name": "ZedFund Admin",
+      "email": "admin@zedfund.zm",
+      "passwordHash": "$2a$10$VsnIpk0RUz02KX8dVrYUiePfg1ELnCjud9aRgs05bXOw96XBZYJOu",
+      "role": "admin",
+      "momoProvider": null,
+      "momoNumber": null,
+      "walletBalance": 0,
+      "createdAt": "2025-09-01T08:00:00.000Z"
+    },
+    {
+      "id": "u-mwansa",
+      "name": "Mwansa Kabila",
+      "email": "mwansa@example.com",
+      "passwordHash": "$2a$10$VsnIpk0RUz02KX8dVrYUiePfg1ELnCjud9aRgs05bXOw96XBZYJOu",
+      "role": "organizer",
+      "momoProvider": "zamtel",
+      "momoNumber": "0955123456",
+      "walletBalance": 42500,
+      "createdAt": "2025-09-03T10:00:00.000Z"
+    },
+    {
+      "id": "u-chanda",
+      "name": "Chanda Mutale",
+      "email": "chanda@example.com",
+      "passwordHash": "$2a$10$VsnIpk0RUz02KX8dVrYUiePfg1ELnCjud9aRgs05bXOw96XBZYJOu",
+      "role": "organizer",
+      "momoProvider": "mtn",
+      "momoNumber": "0977445566",
+      "walletBalance": 37500,
+      "createdAt": "2025-09-05T09:00:00.000Z"
+    },
+    {
+      "id": "u-demo",
+      "name": "Demo Donor",
+      "email": "demo@zedfund.zm",
+      "passwordHash": "$2a$10$VsnIpk0RUz02KX8dVrYUiePfg1ELnCjud9aRgs05bXOw96XBZYJOu",
+      "role": "donor",
+      "momoProvider": "mtn",
+      "momoNumber": "0966112233",
+      "walletBalance": 0,
+      "createdAt": "2025-09-10T12:00:00.000Z"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "c-water-luapula",
+      "title": "Clean Water Infrastructure for Luapula Province",
+      "category": "Health",
+      "province": "Luapula",
+      "organizerId": "u-mwansa",
+      "organizerName": "Mwansa Kabila",
+      "verifiedOrganizer": true,
+      "image": "https://picsum.photos/seed/c-water-luapula/800/600",
+      "summary": "Partnering with rural communities to install solar-powered boreholes and sustainable irrigation systems.",
+      "mission": "Access to clean water remains one of the most significant challenges for the residents of the Luapula Province. Currently, over 40% of households walk more than 5 kilometers daily to reach the nearest safe water source. Our project aims to bridge this gap by installing three industrial-grade solar boreholes, complete with 10,000-liter storage tanks and distribution kiosks that double as charging stations for the local community.",
+      "quote": "This project will directly impact 4,500 residents, reducing water-borne diseases by an estimated 70% within the first year of operation. — Zambian Health Board Advisory",
+      "goal": 85000,
+      "raised": 42600,
+      "status": "verified",
+      "deadlineDays": 18,
+      "documents": [
+        "PACRA Certificate",
+        "Bank Statement",
+        "Site Survey Report"
+      ],
+      "updates": [
+        {
+          "date": "2025-10-12",
+          "title": "Site surveys completed in Mansa",
+          "body": "Our engineering team has identified the optimal drilling locations for the first two boreholes."
+        }
+      ],
+      "createdAt": "2025-09-15T08:00:00.000Z"
+    },
+    {
+      "id": "c-solar-irrigation",
+      "title": "Solar Irrigation for Smallholder Farmers",
+      "category": "Agriculture",
+      "province": "Lusaka",
+      "organizerId": "u-chanda",
+      "organizerName": "Chanda Mutale",
+      "verifiedOrganizer": true,
+      "image": "https://picsum.photos/seed/c-solar-irrigation/800/600",
+      "summary": "Bringing solar-powered drip irrigation to smallholder maize and vegetable farmers outside Lusaka.",
+      "mission": "Smallholder farmers in peri-urban Lusaka lose entire seasons of vegetables to erratic rainfall. This campaign funds solar-powered pumps and drip irrigation kits for 30 farming households, cutting water waste by 60% and enabling year-round growing.",
+      "quote": "With irrigation, we can finally farm in the dry season too. — Beneficiary, Chongwe farming cooperative",
+      "goal": 50000,
+      "raised": 37500,
+      "status": "verified",
+      "deadlineDays": 12,
+      "documents": [
+        "Cooperative Registration",
+        "Bank Statement"
+      ],
+      "updates": [],
+      "createdAt": "2025-09-20T08:00:00.000Z"
+    },
+    {
+      "id": "c-girls-stem",
+      "title": "Zambian Girls Who Code",
+      "category": "Education",
+      "province": "Copperbelt",
+      "organizerId": "u-chanda",
+      "organizerName": "STEM Zambia",
+      "verifiedOrganizer": true,
+      "image": "https://picsum.photos/seed/c-girls-stem/800/600",
+      "summary": "A 12-week coding bootcamp for 60 girls in Ndola and Kitwe, covering web development and robotics basics.",
+      "mission": "Fewer than 12% of ICT graduates in Zambia are women. This program gives 60 secondary school girls in the Copperbelt hands-on laptops, mentorship from female engineers, and a structured 12-week curriculum in web development and robotics, ending in a public showcase.",
+      "quote": "I built my first website in week three. I want to study computer science now. — Program participant, Ndola",
+      "goal": 120000,
+      "raised": 110450,
+      "status": "verified",
+      "deadlineDays": 4,
+      "documents": [
+        "NGO Registration",
+        "Curriculum Plan",
+        "Bank Statement"
+      ],
+      "updates": [],
+      "createdAt": "2025-09-12T08:00:00.000Z"
+    },
+    {
+      "id": "c-mobile-clinic",
+      "title": "Mobile Clinic for Rural Southern Province",
+      "category": "Health",
+      "province": "Southern",
+      "organizerId": "u-mwansa",
+      "organizerName": "Health4All Org",
+      "verifiedOrganizer": true,
+      "image": "https://picsum.photos/seed/c-mobile-clinic/800/600",
+      "summary": "A fully-equipped mobile clinic van bringing maternal health and vaccination services to villages without a nearby clinic.",
+      "mission": "Villages more than 20km from the nearest clinic in Southern Province often go without basic maternal and child health services. This mobile clinic van will run a rotating weekly schedule across 14 villages, offering antenatal checkups, vaccinations, and basic diagnostics.",
+      "quote": "",
+      "goal": 250000,
+      "raised": 75000,
+      "status": "verified",
+      "deadlineDays": 25,
+      "documents": [
+        "NGO Registration",
+        "Medical License",
+        "Bank Statement"
+      ],
+      "updates": [],
+      "createdAt": "2025-09-18T08:00:00.000Z"
+    },
+    {
+      "id": "c-kabwe-weaving",
+      "title": "Kabwe Weaving Cooperative Expansion",
+      "category": "Artisans",
+      "province": "Eastern",
+      "organizerId": "u-chanda",
+      "organizerName": "Alice Phiri",
+      "verifiedOrganizer": true,
+      "image": "https://picsum.photos/seed/c-kabwe-weaving/800/600",
+      "summary": "Funding new looms and raw materials for a women-led weaving cooperative selling handcrafted goods.",
+      "mission": "Our cooperative of 18 women weavers has more orders than we can fulfil with our current two looms. This campaign funds four additional looms and three months of raw materials, allowing us to double production and take on two apprentices.",
+      "quote": "",
+      "goal": 15000,
+      "raised": 8250,
+      "status": "verified",
+      "deadlineDays": 8,
+      "documents": [
+        "Cooperative Registration"
+      ],
+      "updates": [],
+      "createdAt": "2025-09-22T08:00:00.000Z"
+    },
+    {
+      "id": "c-lusaka-clinic-equip",
+      "title": "Lusaka Central Clinic Equipment",
+      "category": "Health",
+      "province": "Lusaka",
+      "organizerId": "u-mwansa",
+      "organizerName": "Mwansa Kabila",
+      "verifiedOrganizer": true,
+      "image": "https://picsum.photos/seed/c-lusaka-clinic-equip/800/600",
+      "summary": "New pediatric dialysis machines for Lusaka Central Clinic, serving children across Lusaka Province.",
+      "mission": "Lusaka Central Clinic currently refers all pediatric dialysis cases to a single overcrowded facility. This campaign funds two new pediatric dialysis machines and training for two nurses to operate them on-site.",
+      "quote": "",
+      "goal": 200000,
+      "raised": 145000,
+      "status": "verified",
+      "deadlineDays": 6,
+      "documents": [
+        "Hospital Authorization",
+        "Procurement Quote",
+        "Bank Statement"
+      ],
+      "updates": [],
+      "createdAt": "2025-09-08T08:00:00.000Z"
+    },
+    {
+      "id": "c-village-solar",
+      "title": "Village Solar Power Initiative",
+      "category": "Community",
+      "province": "Southern",
+      "organizerId": "u-chanda",
+      "organizerName": "Chanda Mutale",
+      "verifiedOrganizer": true,
+      "image": "https://picsum.photos/seed/c-village-solar/800/600",
+      "summary": "Providing sustainable solar power to rural primary schools in the Southern Province.",
+      "mission": "Six rural primary schools in the Southern Province have no electricity, meaning no lighting, no computer lab, and no way to charge teaching devices. This campaign funds solar installation kits for all six schools.",
+      "quote": "",
+      "goal": 195000,
+      "raised": 89200,
+      "status": "verified",
+      "deadlineDays": 14,
+      "documents": [
+        "School Authorization Letters",
+        "Bank Statement"
+      ],
+      "updates": [],
+      "createdAt": "2025-09-25T08:00:00.000Z"
+    },
+    {
+      "id": "c-kabwe-tech-hub",
+      "title": "Kabwe Tech Hub for Youth",
+      "category": "Education",
+      "province": "Central",
+      "organizerId": "u-mwansa",
+      "organizerName": "Mwansa Kabila",
+      "verifiedOrganizer": true,
+      "image": "https://picsum.photos/seed/c-kabwe-tech-hub/800/600",
+      "summary": "Building a modern computer lab and training center for high school students in Kabwe.",
+      "mission": "Kabwe's youth currently travel to Lusaka for any meaningful digital skills training. This hub will house 20 computers, reliable internet, and a part-time instructor, serving 400+ students per year.",
+      "quote": "",
+      "goal": 230000,
+      "raised": 210000,
+      "status": "verified",
+      "deadlineDays": 2,
+      "documents": [
+        "Council Approval",
+        "Procurement Quote",
+        "Bank Statement"
+      ],
+      "updates": [],
+      "createdAt": "2025-09-02T08:00:00.000Z"
+    }
+  ],
+  "donations": [
+    {
+      "id": "d-1",
+      "campaignId": "c-water-luapula",
+      "donorId": null,
+      "donorName": "Sepiso M.",
+      "amount": 500,
+      "provider": "zamtel",
+      "phone": "0955******",
+      "status": "success",
+      "createdAt": "2025-10-17T08:00:00.000Z"
+    },
+    {
+      "id": "d-2",
+      "campaignId": "c-water-luapula",
+      "donorId": null,
+      "donorName": "John K.",
+      "amount": 1200,
+      "provider": "mtn",
+      "phone": "0977******",
+      "status": "success",
+      "createdAt": "2025-10-17T03:00:00.000Z"
+    },
+    {
+      "id": "d-3",
+      "campaignId": "c-water-luapula",
+      "donorId": null,
+      "donorName": "Anonymous",
+      "amount": 250,
+      "provider": "airtel",
+      "phone": "0966******",
+      "status": "success",
+      "createdAt": "2025-10-16T20:00:00.000Z"
+    },
+    {
+      "id": "d-mqkqrflf-s5l4cc",
+      "campaignId": "c-water-luapula",
+      "donorId": null,
+      "donorName": "Test User",
+      "amount": 100,
+      "provider": "mtn",
+      "phone": "0977******",
+      "status": "success",
+      "createdAt": "2026-06-19T09:43:44.307Z"
+    },
+    {
+      "id": "d-mql98f2h-5c4hqc",
+      "campaignId": "c-girls-stem",
+      "donorId": "u-admin",
+      "donorName": "Anonymous",
+      "amount": 50,
+      "provider": "mtn",
+      "phone": "0765******",
+      "status": "success",
+      "createdAt": "2026-06-19T18:20:49.865Z"
+    }
+  ],
+  "withdrawals": [
+    {
+      "id": "w-1",
+      "userId": "u-mwansa",
+      "amount": 12000,
+      "provider": "mtn",
+      "status": "success",
+      "createdAt": "2025-10-17T09:00:00.000Z"
+    }
+  ]
+}

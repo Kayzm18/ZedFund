@@ -1,0 +1,120 @@
+/* ---------- Campaign card ---------- */
+.campaign-card { overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.campaign-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-floating); }
+.campaign-card-media { position: relative; aspect-ratio: 16/10; overflow: hidden; background: var(--surface-container-high); }
+.campaign-card-media img { width: 100%; height: 100%; object-fit: cover; }
+.campaign-card-body { padding: var(--space-sm) var(--space-sm) var(--space-md); display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.campaign-card-tags { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--on-surface-variant); }
+.campaign-card-title { font-family: var(--font-display); font-weight: 700; font-size: 18px; line-height: 1.3; }
+.campaign-card-org { font-size: 13px; color: var(--on-surface-variant); display: flex; align-items: center; gap: 4px; }
+.verified-tick { color: var(--primary); }
+.campaign-card-stats { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-top: 2px; }
+.campaign-card-amounts { display: flex; justify-content: space-between; font-size: 13px; color: var(--on-surface-variant); }
+.campaign-card-amounts strong { color: var(--on-surface); font-family: var(--font-mono); }
+
+/* ---------- Mobile money chips ---------- */
+.momo-chip-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.momo-chip {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 14px 8px; border-radius: var(--radius-lg);
+  border: 1.5px solid var(--surface-container-high); background: var(--surface-container-lowest);
+  font-size: 13px; font-weight: 600; position: relative; transition: border-color 0.15s ease;
+}
+.momo-chip:hover { border-color: var(--outline-variant); }
+.momo-chip.selected { border-color: var(--primary); background: var(--primary-fixed); box-shadow: 0 0 0 3px rgba(0, 105, 72, 0.12); }
+.momo-chip-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 13px; }
+.momo-mtn .momo-chip-icon { background: #FFC700; color: #2b1d00; }
+.momo-airtel .momo-chip-icon { background: #ED1C24; }
+.momo-zamtel .momo-chip-icon { background: #00A859; }
+.momo-chip-check { position: absolute; top: 6px; right: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--primary); color: #fff; display: none; align-items: center; justify-content: center; font-size: 10px; }
+.momo-chip.selected .momo-chip-check { display: flex; }
+
+/* ---------- Modal ---------- */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(18, 28, 42, 0.5);
+  display: flex; align-items: center; justify-content: center; z-index: 200; padding: var(--space-sm);
+}
+.modal {
+  background: var(--surface-container-lowest); border-radius: var(--radius-lg);
+  max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--shadow-floating); padding: var(--space-md);
+}
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-sm); }
+.modal-close { font-size: 22px; color: var(--on-surface-variant); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: var(--surface-container-low); }
+
+/* ---------- Payment status visuals ---------- */
+.payment-status-icon { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-sm); font-size: 28px; }
+.payment-status-icon.pending { background: var(--surface-container-high); }
+.payment-status-icon.success { background: var(--primary-fixed); color: var(--primary); }
+.payment-status-icon.failed { background: var(--error-container); color: var(--error); }
+.amount-quick-select { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: var(--space-sm); }
+.amount-quick-btn { padding: 10px; border-radius: var(--radius); border: 1.5px solid var(--surface-container-high); font-weight: 600; font-size: 14px; }
+.amount-quick-btn.selected { border-color: var(--primary); background: var(--primary-fixed); }
+
+/* ---------- Stat card ---------- */
+.stat-card { display: flex; flex-direction: column; gap: 6px; }
+.stat-card .stat-label { font-size: 13px; font-weight: 600; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.03em; }
+.stat-card .stat-value { font-family: var(--font-display); font-size: 30px; font-weight: 700; }
+.stat-card .stat-trend { font-size: 13px; color: var(--primary); font-weight: 600; }
+.stat-card.alert .stat-value { color: var(--error); }
+
+/* ---------- Step card (home page) ---------- */
+.step-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; position: relative; }
+.step-icon { width: 56px; height: 56px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #fff; }
+.step-icon.green { background: var(--primary); }
+.step-icon.orange { background: var(--secondary-container); }
+.step-icon.teal { background: var(--tertiary); }
+.steps-row { display: flex; justify-content: space-between; gap: var(--space-md); position: relative; }
+.steps-row::before { content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 2px; background: var(--surface-container-high); z-index: 0; }
+.step-card { z-index: 1; flex: 1; }
+@media (max-width: 900px) { .steps-row { flex-direction: column; } .steps-row::before { display: none; } }
+
+/* ---------- Testimonial ---------- */
+.testimonial-card { display: flex; flex-direction: column; gap: var(--space-sm); }
+.stars { color: var(--secondary-container); font-size: 15px; letter-spacing: 2px; }
+.testimonial-footer { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+.testimonial-name { font-weight: 700; font-size: 14px; }
+.testimonial-role { font-size: 12px; color: var(--on-surface-variant); }
+
+/* ---------- Donor row / activity list ---------- */
+.list-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--surface-container-high); }
+.list-row:last-child { border-bottom: none; }
+.donor-meta { display: flex; align-items: center; gap: 10px; }
+.donor-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--surface-container); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+
+/* ---------- Table ---------- */
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.data-table th { text-align: left; padding: 10px 12px; color: var(--on-surface-variant); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 1px solid var(--surface-container-high); }
+.data-table td { padding: 14px 12px; border-bottom: 1px solid var(--surface-container-high); }
+.data-table tr:last-child td { border-bottom: none; }
+.status-pill { padding: 4px 12px; border-radius: var(--radius-full); font-size: 12px; font-weight: 700; display: inline-block; }
+.status-success { background: var(--primary-fixed); color: var(--on-primary-fixed-variant); }
+.status-pending { background: var(--secondary-fixed); color: var(--on-secondary-container); }
+.status-failed { background: var(--error-container); color: var(--on-error-container); }
+
+/* ---------- Sidebar filters ---------- */
+.filter-block { margin-bottom: var(--space-md); }
+.filter-block h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--on-surface-variant); }
+.checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 14px; }
+.checkbox-row input { width: 16px; height: 16px; accent-color: var(--primary); }
+.range-input { width: 100%; accent-color: var(--primary); }
+
+/* ---------- Sidebar nav (dashboard / admin) ---------- */
+.sidebar { background: var(--surface-container-low); min-height: 100vh; padding: var(--space-md) var(--space-sm); width: 240px; display: flex; flex-direction: column; }
+.sidebar-link { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: var(--radius); font-weight: 500; font-size: 14px; color: var(--on-surface-variant); margin-bottom: 4px; }
+.sidebar-link:hover { background: var(--surface-container); }
+.sidebar-link.active { background: var(--primary); color: #fff; font-weight: 600; }
+.app-shell { display: flex; }
+.app-main { flex: 1; padding: var(--space-md) var(--space-lg); min-width: 0; }
+@media (max-width: 900px) {
+  .app-shell { flex-direction: column; }
+  .sidebar { width: 100%; flex-direction: row; overflow-x: auto; min-height: auto; }
+}
+
+/* ---------- Withdraw card ---------- */
+.wallet-card { background: linear-gradient(135deg, var(--primary), var(--tertiary)); color: #fff; padding: var(--space-md); border-radius: var(--radius-lg); }
+.wallet-card .stat-label, .wallet-card .stat-value { color: #fff; }
+
+.momo-account-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: var(--radius-lg); border: 1.5px solid var(--surface-container-high); margin-bottom: 8px; }
+.momo-account-row.connected { border-color: var(--primary); background: var(--primary-fixed); }

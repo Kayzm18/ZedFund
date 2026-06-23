@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How it Works — ZedFund</title>
+<link rel="icon" href="images/logo.png">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div id="navbar-root"></div>
+
+<main class="container section">
+  <h1 class="display-md" style="text-align:center;">How ZedFund Works</h1>
+  <p class="body-lg text-muted" style="text-align:center; max-width:560px; margin: 8px auto var(--space-xl);">No bank account, no card — just your phone. Here's how Zambians fund and support real community projects.</p>
+
+  <div class="card card-pad" style="margin-bottom: var(--space-lg);">
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-icon green">📝</div>
+        <strong class="body-lg">1. Create</strong>
+        <p class="body-md text-muted">Share your story, set a funding goal, and launch your campaign in minutes — no paperwork required to start.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon orange">🔗</div>
+        <strong class="body-lg">2. Share</strong>
+        <p class="body-md text-muted">Reach your community through social media, WhatsApp, and SMS. Every campaign gets a shareable link.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon teal">📲</div>
+        <strong class="body-lg">3. Receive</strong>
+        <p class="body-md text-muted">Donors pay instantly with MTN, Airtel, or Zamtel mobile money. Withdraw your funds the same way.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card card-pad">
+      <h2 class="headline-md" style="margin-bottom:10px;">For Donors</h2>
+      <ul style="margin-left:18px; list-style: disc; color: var(--on-surface-variant); display:flex; flex-direction:column; gap:8px;">
+        <li>Browse verified campaigns by category, province, or funding goal.</li>
+        <li>Enter your mobile number and approve the payment request on your phone — no card needed.</li>
+        <li>Track exactly how much has been raised and follow campaign updates.</li>
+      </ul>
+    </div>
+    <div class="card card-pad">
+      <h2 class="headline-md" style="margin-bottom:10px;">For Organizers</h2>
+      <ul style="margin-left:18px; list-style: disc; color: var(--on-surface-variant); display:flex; flex-direction:column; gap:8px;">
+        <li>Submit your campaign with documents for identity and project verification.</li>
+        <li>Once approved, your campaign goes live and starts accepting mobile money donations.</li>
+        <li>Withdraw available funds straight to your MTN, Airtel, or Zamtel account.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card card-pad" style="margin-top: var(--space-lg); text-align:center;">
+    <h2 class="headline-md" style="margin-bottom:8px;">Ready to get started?</h2>
+    <div class="flex gap-sm" style="justify-content:center;">
+      <a href="create-campaign.html" class="btn btn-action">Start Fundraising</a>
+      <a href="discover.html" class="btn btn-ghost">Browse Causes</a>
+    </div>
+  </div>
+</main>
+
+<div id="footer-root"></div>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script>
+  renderNavbar('how');
+  renderFooter();
+</script>
+</body>
+</html>

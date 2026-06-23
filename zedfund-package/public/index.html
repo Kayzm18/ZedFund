@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZedFund — Empower Change in Zambia</title>
+<link rel="icon" href="images/logo.png">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div id="navbar-root"></div>
+
+<main class="container">
+
+  <section class="hero">
+    <div>
+      <span class="badge hero-eyebrow">🔒 Secured by MTN &amp; Airtel Zambia</span>
+      <h1 class="display-lg">Empower Change in Zambia</h1>
+      <p class="body-lg">Join thousands of Zambians funding projects in health, education, and community growth. Transparent, local, and impactful.</p>
+      <div class="hero-ctas">
+        <a href="create-campaign.html" class="btn btn-action">Start Fundraising →</a>
+        <a href="discover.html" class="btn btn-ghost">Browse Causes</a>
+      </div>
+      <div class="card card-pad flex items-center gap-sm" style="max-width:420px;">
+        <div class="live-avatars"><span></span><span></span><span></span></div>
+        <div>
+          <div class="label-sm text-muted">LIVE DONATION</div>
+          <div class="body-md"><strong id="live-donation-text">Chanda M. just donated K500 to Education Fund</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-image-wrap">
+      <div class="hero-live-pill">
+        <div class="live-avatars"><span></span><span></span></div>
+        +12 donors today
+      </div>
+      <img src="https://picsum.photos/seed/zedfund-hero/800/600" alt="Zambian children at a community school">
+      <div class="hero-total-card">
+        <span style="font-size:22px;">📈</span>
+        <div>
+          <div class="label-sm text-muted">Total Raised</div>
+          <div class="headline-md" id="hero-total">K12.4M</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="hero-stats">
+    <div class="stat-card">
+      <span class="stat-value" id="stat-projects">450+</span>
+      <span class="label-sm text-muted">Active Projects</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value" id="stat-raised">K12.4M</span>
+      <span class="label-sm text-muted">Funds Raised</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value" id="stat-donors">15k+</span>
+      <span class="label-sm text-muted">Donors</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">100%</span>
+      <span class="label-sm text-muted">Transparency</span>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <h2 class="headline-lg">Featured Campaigns</h2>
+        <p class="text-muted body-md">Urgent causes that need your support today.</p>
+      </div>
+      <a href="discover.html" class="view-all-link">View All Campaigns →</a>
+    </div>
+    <div class="grid grid-3" id="featured-campaigns">
+      <div class="skeleton" style="height:320px;"></div>
+      <div class="skeleton" style="height:320px;"></div>
+      <div class="skeleton" style="height:320px;"></div>
+    </div>
+  </section>
+
+  <section class="section card card-pad">
+    <h2 class="headline-lg" style="text-align:center; margin-bottom: var(--space-lg);">Change Lives in 3 Simple Steps</h2>
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-icon green">📝</div>
+        <strong class="body-lg">1. Create</strong>
+        <p class="body-md text-muted">Share your story, set a goal, and launch your campaign in minutes.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon orange">🔗</div>
+        <strong class="body-lg">2. Share</strong>
+        <p class="body-md text-muted">Reach your community through social media, WhatsApp, and SMS.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon teal">📲</div>
+        <strong class="body-lg">3. Receive</strong>
+        <p class="body-md text-muted">Withdraw funds instantly via Mobile Money or Bank Transfer.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="payment-demo">
+      <div>
+        <h2 class="headline-lg">The Local Way to Give</h2>
+        <p class="body-md text-muted" style="margin: var(--space-xs) 0 var(--space-md);">We've partnered with Zambia's leading network providers to ensure secure, instant transactions for every citizen.</p>
+        <div class="momo-chip-group" style="max-width:380px;">
+          <div class="momo-chip momo-mtn selected"><span class="momo-chip-icon">M</span><span class="momo-chip-check">&check;</span>MTN MoMo</div>
+          <div class="momo-chip momo-airtel"><span class="momo-chip-icon">A</span><span class="momo-chip-check">&check;</span>Airtel Money</div>
+          <div class="momo-chip momo-zamtel"><span class="momo-chip-icon">Z</span><span class="momo-chip-check">&check;</span>Zamtel Kwacha</div>
+        </div>
+      </div>
+      <div class="card card-pad card-floating">
+        <div class="flex justify-between items-center" style="margin-bottom:14px;">
+          <strong class="body-lg">Secure Payment</strong>
+          <span>🔒</span>
+        </div>
+        <div class="field">
+          <label>Enter amount (ZMW)</label>
+          <input type="number" id="demo-amount" value="500">
+        </div>
+        <button class="btn btn-primary btn-block" id="demo-donate-btn">Donate with MTN MoMo</button>
+        <p class="label-sm text-muted" style="text-align:center; margin-top:8px;">Zero processing fees for all donors</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="headline-lg" style="text-align:center; margin-bottom: var(--space-lg);">Voices of Trust</h2>
+    <div class="grid grid-3">
+      <div class="card card-pad testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="body-md">ZedFund changed how I think about charity in Lusaka. Seeing exactly where my money goes makes me proud to contribute.</p>
+        <div class="testimonial-footer">
+          <div class="donor-avatar">MK</div>
+          <div>
+            <div class="testimonial-name">Mutale K.</div>
+            <div class="testimonial-role">Verified Donor</div>
+          </div>
+        </div>
+      </div>
+      <div class="card card-pad testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="body-md">Launching our school project was seamless. The community support from fellow Zambians across the globe was overwhelming.</p>
+        <div class="testimonial-footer">
+          <div class="donor-avatar">JZ</div>
+          <div>
+            <div class="testimonial-name">James Z.</div>
+            <div class="testimonial-role">Campaign Organizer</div>
+          </div>
+        </div>
+      </div>
+      <div class="card card-pad testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="body-md">The mobile money integration is perfect. I can donate in seconds while sitting in a taxi. True financial inclusion!</p>
+        <div class="testimonial-footer">
+          <div class="donor-avatar">CM</div>
+          <div>
+            <div class="testimonial-name">Choolwe M.</div>
+            <div class="testimonial-role">Regular Contributor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="footer-root"></div>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/mobilemoney.js"></script>
+<script>
+  renderNavbar('home');
+  renderFooter();
+
+  async function loadFeatured() {
+    const grid = document.getElementById('featured-campaigns');
+    try {
+      const { campaigns } = await api('/campaigns?sort=trending');
+      const featured = campaigns.slice(0, 3);
+      if (!featured.length) {
+        grid.innerHTML = `<div class="empty-state">No campaigns yet — be the first to start one.</div>`;
+        return;
+      }
+      grid.innerHTML = featured.map(campaignCardHtml).join('');
+    } catch (err) {
+      grid.innerHTML = `<div class="alert alert-error">Couldn't load campaigns: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  function campaignCardHtml(c) {
+    const percent = pct(c.raised, c.goal);
+    return `
+      <a href="campaign-detail.html?id=${c.id}" class="card campaign-card">
+        <div class="campaign-card-media">
+          <img src="${c.image}" alt="${escapeHtml(c.title)}">
+          <span class="badge badge-deadline">${c.deadlineDays} days left</span>
+        </div>
+        <div class="campaign-card-body">
+          <div class="campaign-card-tags">
+            <span class="label-sm" style="text-transform:uppercase; color: var(--primary); font-weight:700;">${escapeHtml(c.category)}</span>
+          </div>
+          <div class="campaign-card-title">${escapeHtml(c.title)}</div>
+          <div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div>
+          <div class="campaign-card-amounts">
+            <span><strong>${money(c.raised)}</strong> raised</span>
+            <span>${percent}%</span>
+          </div>
+          <button class="btn btn-action btn-block btn-sm">💸 Donate Now</button>
+        </div>
+      </a>
+    `;
+  }
+
+  document.getElementById('demo-donate-btn').addEventListener('click', () => {
+    window.location.href = 'discover.html';
+  });
+
+  loadFeatured();
+</script>
+</body>
+</html>

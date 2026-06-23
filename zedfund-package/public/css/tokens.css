@@ -1,0 +1,89 @@
+/* ========================================================
+   ZedFund Design Tokens — derived from DESIGN.md
+   "Fintech Growth System": Prosperity Through Transparency
+   ======================================================== */
+
+:root {
+  /* Surfaces */
+  --surface: #f8f9ff;
+  --surface-dim: #d0dbed;
+  --surface-bright: #f8f9ff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #eff4ff;
+  --surface-container: #e6eeff;
+  --surface-container-high: #dee9fc;
+  --surface-container-highest: #d9e3f6;
+  --surface-variant: #d9e3f6;
+
+  /* Text on surfaces */
+  --on-surface: #121c2a;
+  --on-surface-variant: #3d4a42;
+  --inverse-surface: #27313f;
+  --inverse-on-surface: #eaf1ff;
+  --outline: #6d7a72;
+  --outline-variant: #bccac0;
+
+  /* Primary: Emerald Green — growth, trust, success */
+  --primary: #006948;
+  --on-primary: #ffffff;
+  --primary-container: #00855d;
+  --on-primary-container: #f5fff7;
+  --inverse-primary: #68dba9;
+  --primary-fixed: #85f8c4;
+  --primary-fixed-dim: #68dba9;
+
+  /* Secondary: Vibrant Orange — reserved for Donate / urgent action */
+  --secondary: #9d4300;
+  --on-secondary: #ffffff;
+  --secondary-container: #fd761a;
+  --on-secondary-container: #5c2400;
+  --secondary-fixed: #ffdbca;
+  --secondary-fixed-dim: #ffb690;
+
+  /* Tertiary: Teal — supporting accent */
+  --tertiary: #00685f;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #008378;
+  --on-tertiary-container: #f4fffc;
+  --tertiary-fixed: #89f5e7;
+
+  /* Semantic */
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+  --success: #006948;
+  --warning: #9d4300;
+
+  /* Background */
+  --background: #f8f9ff;
+  --on-background: #121c2a;
+
+  /* Radii */
+  --radius-sm: 0.25rem;
+  --radius: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Spacing (8px linear scale) */
+  --space-base: 4px;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-gutter: 20px;
+  --space-margin-mobile: 16px;
+  --space-margin-desktop: 40px;
+
+  /* Elevation */
+  --shadow-surface: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --shadow-floating: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  /* Type */
+  --font-display: 'Hanken Grotesk', sans-serif;
+  --font-body: 'Hanken Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}

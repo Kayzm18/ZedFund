@@ -1,0 +1,15 @@
+{
+  "name": "zedfund",
+  "version": "1.0.0",
+  "description": "ZedFund - Crowdfunding for Zambia, powered by Mobile Money",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

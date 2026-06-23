@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start Fundraising — ZedFund</title>
+<link rel="icon" href="images/logo.png">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div id="navbar-root"></div>
+
+<main class="container section">
+  <div class="create-wrap">
+    <h1 class="display-md" style="text-align:center;">Start Your Fundraiser</h1>
+    <p class="body-md text-muted" style="text-align:center; margin-bottom: var(--space-lg);">Tell your story, set a goal, and start receiving Mobile Money donations today.</p>
+
+    <div class="card card-pad">
+      <div id="form-alert"></div>
+      <form id="campaign-form">
+        <div class="field">
+          <label>Campaign title</label>
+          <input type="text" id="title" required placeholder="e.g. Clean Water Infrastructure for Luapula Province">
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label>Category</label>
+            <select id="category" required>
+              <option value="">Select a category</option>
+              <option>Health</option>
+              <option>Education</option>
+              <option>Agriculture</option>
+              <option>Technology</option>
+              <option>Sustainability</option>
+              <option>Artisans</option>
+              <option>Community</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Province</label>
+            <select id="province" required>
+              <option value="">Select a province</option>
+              <option>Lusaka</option>
+              <option>Copperbelt</option>
+              <option>Southern</option>
+              <option>Northern</option>
+              <option>Eastern</option>
+              <option>Western</option>
+              <option>Luapula</option>
+              <option>North-Western</option>
+              <option>Central</option>
+              <option>Muchinga</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Short summary</label>
+          <textarea id="summary" required rows="2" placeholder="One or two sentences describing the project."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Full mission / story</label>
+          <textarea id="mission" required rows="5" placeholder="Explain the problem, your plan, and the impact donors will make."></textarea>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label>Funding goal (ZMW)</label>
+            <input type="number" id="goal" required min="1" placeholder="e.g. 85000">
+          </div>
+          <div class="field">
+            <label>Campaign duration (days)</label>
+            <input type="number" id="deadlineDays" min="1" value="30">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Cover image</label>
+          <div class="image-options" id="image-options"></div>
+          <span class="field-hint">Pick a placeholder image — you can update it later from your dashboard.</span>
+        </div>
+
+        <button type="submit" class="btn btn-action btn-block" id="submit-btn" style="margin-top: var(--space-sm);">Launch Campaign</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<div id="footer-root"></div>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script>
+  renderNavbar();
+  renderFooter();
+  if (!requireLoginOrRedirect()) { /* redirected */ }
+
+  const IMAGES = [
+    'https://picsum.photos/seed/zf-1/400/400',
+    'https://picsum.photos/seed/zf-2/400/400',
+    'https://picsum.photos/seed/zf-3/400/400',
+    'https://picsum.photos/seed/zf-4/400/400'
+  ];
+  let selectedImage = IMAGES[0];
+
+  const imgRoot = document.getElementById('image-options');
+  imgRoot.innerHTML = IMAGES.map((src, i) => `
+    <div class="image-option ${i === 0 ? 'selected' : ''}" data-src="${src}">
+      <img src="${src}" alt="Cover option ${i + 1}">
+    </div>
+  `).join('');
+  imgRoot.querySelectorAll('.image-option').forEach((el) => {
+    el.addEventListener('click', () => {
+      selectedImage = el.dataset.src;
+      imgRoot.querySelectorAll('.image-option').forEach((o) => o.classList.remove('selected'));
+      el.classList.add('selected');
+    });
+  });
+
+  document.getElementById('campaign-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const alertBox = document.getElementById('form-alert');
+    const btn = document.getElementById('submit-btn');
+    alertBox.innerHTML = '';
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const res = await api('/campaigns', {
+        method: 'POST',
+        body: {
+          title: document.getElementById('title').value.trim(),
+          category: document.getElementById('category').value,
+          province: document.getElementById('province').value,
+          summary: document.getElementById('summary').value.trim(),
+          mission: document.getElementById('mission').value.trim(),
+          goal: document.getElementById('goal').value,
+          deadlineDays: document.getElementById('deadlineDays').value,
+          image: selectedImage
+        }
+      });
+      alertBox.innerHTML = `<div class="alert alert-success">Campaign submitted! It's now pending verification — you'll find it on your dashboard.</div>`;
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1400);
+    } catch (err) {
+      alertBox.innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+      btn.disabled = false;
+      btn.innerHTML = 'Launch Campaign';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — ZedFund</title>
+<link rel="icon" href="images/logo.png">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a href="index.html" class="logo" style="margin-bottom: var(--space-md);"><img src="images/logo.png" alt="ZedFund logo">ZedFund</a>
+    <div style="flex:1;">
+      <div class="sidebar-link active">🛡️ Verification Queue</div>
+      <div class="sidebar-link" id="link-all">📋 All Campaigns</div>
+    </div>
+    <button class="btn btn-ghost btn-block" id="logout-btn">Log out</button>
+  </aside>
+
+  <main class="app-main" id="page-root">
+    <div class="skeleton" style="height:120px; margin-bottom: var(--space-md);"></div>
+    <div class="skeleton" style="height:300px;"></div>
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script>
+  if (!requireLoginOrRedirect()) { /* redirected */ }
+  const user = getUser();
+  if (!user || user.role !== 'admin') {
+    window.location.href = 'dashboard.html';
+  }
+
+  document.getElementById('logout-btn').addEventListener('click', () => { clearAuth(); window.location.href = 'index.html'; });
+
+  const root = document.getElementById('page-root');
+  let view = 'pending';
+
+  document.getElementById('link-all').addEventListener('click', () => { view = 'all'; load(); });
+
+  function pendingCard(c) {
+    return `
+      <div class="card card-pad flex justify-between items-center" style="margin-bottom: var(--space-sm); gap: var(--space-md);">
+        <img src="${c.image}" alt="${escapeHtml(c.title)}" style="width:90px; height:70px; object-fit:cover; border-radius: var(--radius);">
+        <div style="flex:1;">
+          <div class="flex items-center gap-sm" style="margin-bottom:4px;">
+            <strong class="body-lg">${escapeHtml(c.title)}</strong>
+            <span class="badge">${escapeHtml(c.category)}</span>
+          </div>
+          <p class="body-md text-muted">Seeking ${money(c.goal)} · ${escapeHtml(c.province)} · by ${escapeHtml(c.organizerName)}</p>
+          <div class="flex gap-sm label-sm text-muted" style="margin-top:6px;">
+            <span>📄 ${c.documents.length} Documents</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-xs">
+          <button class="btn btn-primary btn-sm" data-id="${c.id}" data-action="verify">Verify</button>
+          <button class="btn btn-ghost btn-sm" data-id="${c.id}" data-action="reject">Reject</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function allRow(c) {
+    return `
+      <tr>
+        <td>${escapeHtml(c.title)}</td>
+        <td>${escapeHtml(c.organizerName)}</td>
+        <td class="mono">${money(c.raised)} / ${money(c.goal)}</td>
+        <td><span class="status-pill status-${c.status === 'verified' ? 'success' : c.status === 'pending' ? 'pending' : 'failed'}">${c.status}</span></td>
+      </tr>
+    `;
+  }
+
+  async function load() {
+    try {
+      const stats = await api('/admin/stats');
+      const statsHtml = `
+        <div class="grid grid-3" style="margin-bottom: var(--space-lg);">
+          <div class="card card-pad stat-card">
+            <span class="stat-label">Platform Volume</span>
+            <span class="stat-value">${money(stats.platformVolume)}</span>
+          </div>
+          <div class="card card-pad stat-card">
+            <span class="stat-label">Daily Active Users</span>
+            <span class="stat-value">${stats.dailyActiveUsers.toLocaleString()}</span>
+          </div>
+          <div class="card card-pad stat-card alert">
+            <span class="stat-label">Pending Verifications</span>
+            <span class="stat-value">${stats.pendingVerifications}</span>
+          </div>
+        </div>
+      `;
+
+      if (view === 'pending') {
+        const { campaigns } = await api('/admin/pending');
+        root.innerHTML = `
+          <h1 class="headline-lg" style="margin-bottom: var(--space-md);">Verification Queue</h1>
+          ${statsHtml}
+          ${campaigns.length ? campaigns.map(pendingCard).join('') : '<div class="empty-state">No campaigns waiting for review. 🎉</div>'}
+        `;
+        root.querySelectorAll('button[data-action]').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            try {
+              await api(`/admin/campaigns/${btn.dataset.id}/${btn.dataset.action}`, { method: 'POST' });
+              load();
+            } catch (err) {
+              alert(err.message);
+              btn.disabled = false;
+            }
+          });
+        });
+      } else {
+        const { campaigns } = await api('/admin/campaigns');
+        root.innerHTML = `
+          <h1 class="headline-lg" style="margin-bottom: var(--space-md);">All Campaigns</h1>
+          ${statsHtml}
+          <div class="card card-pad">
+            <table class="data-table">
+              <thead><tr><th>Title</th><th>Organizer</th><th>Raised / Goal</th><th>Status</th></tr></thead>
+              <tbody>${campaigns.map(allRow).join('')}</tbody>
+            </table>
+          </div>
+        `;
+      }
+    } catch (err) {
+      root.innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  if (user && user.role === 'admin') load();
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discover Campaigns — ZedFund</title>
+<link rel="icon" href="images/logo.png">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div id="navbar-root"></div>
+
+<main class="container section">
+  <div class="section-head">
+    <div>
+      <h1 class="display-md">Discover Campaigns</h1>
+      <p class="text-muted body-md">Support Zambian entrepreneurs and community projects.</p>
+    </div>
+    <span class="badge" id="results-count">— Campaigns Found</span>
+  </div>
+
+  <div class="discover-grid">
+    <aside class="discover-filters">
+      <div class="card card-pad">
+        <div class="filter-block">
+          <h4>Category</h4>
+          <div id="category-filters"></div>
+        </div>
+        <div class="filter-block">
+          <h4>Province</h4>
+          <select id="province-select" class="filter-select">
+            <option value="All">All Provinces</option>
+          </select>
+        </div>
+        <div class="filter-block">
+          <h4>Funding Goal (ZMW)</h4>
+          <input type="range" id="goal-range" class="range-input" min="0" max="500000" step="10000" value="500000">
+          <div class="flex justify-between label-sm text-muted">
+            <span>0</span><span>500,000+</span>
+          </div>
+        </div>
+        <div class="filter-block">
+          <h4>Sort By</h4>
+          <select id="sort-select" class="filter-select">
+            <option value="trending">Trending Now</option>
+            <option value="newest">Newest</option>
+            <option value="ending-soon">Ending Soon</option>
+            <option value="most-funded">Most Funded</option>
+          </select>
+        </div>
+        <button class="btn btn-ghost btn-block" id="clear-filters">⟲ Clear Filters</button>
+      </div>
+    </aside>
+
+    <div>
+      <div class="grid grid-3" id="campaign-grid">
+        <div class="skeleton" style="height:320px;"></div>
+        <div class="skeleton" style="height:320px;"></div>
+        <div class="skeleton" style="height:320px;"></div>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</main>
+
+<div id="footer-root"></div>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script>
+  renderNavbar('discover');
+  renderFooter();
+
+  const PAGE_SIZE = 9;
+  let state = {
+    category: 'All',
+    province: 'All',
+    sort: 'trending',
+    maxGoal: 500000,
+    search: new URLSearchParams(window.location.search).get('search') || '',
+    page: 1
+  };
+
+  function campaignCardHtml(c) {
+    const percent = pct(c.raised, c.goal);
+    return `
+      <a href="campaign-detail.html?id=${c.id}" class="card campaign-card">
+        <div class="campaign-card-media">
+          <img src="${c.image}" alt="${escapeHtml(c.title)}">
+          <span class="badge badge-deadline">${c.deadlineDays} days left</span>
+        </div>
+        <div class="campaign-card-body">
+          <div class="campaign-card-tags">
+            <span class="label-sm" style="text-transform:uppercase; color: var(--primary); font-weight:700;">${escapeHtml(c.category)}</span>
+            <span>· ${escapeHtml(c.province)}</span>
+          </div>
+          <div class="campaign-card-title">${escapeHtml(c.title)}</div>
+          <div class="campaign-card-org">by ${escapeHtml(c.organizerName)} ${c.verifiedOrganizer ? '<span class="verified-tick">✓</span>' : ''}</div>
+          <div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div>
+          <div class="campaign-card-amounts">
+            <span>${percent}% Raised</span>
+            <span>Goal: ${money(c.goal)}</span>
+          </div>
+          <div class="campaign-card-amounts"><strong>${money(c.raised)}</strong> contributed</div>
+          <button class="btn btn-action btn-block btn-sm">💸 Donate Now</button>
+        </div>
+      </a>
+    `;
+  }
+
+  async function loadFilters() {
+    try {
+      const { categories, provinces } = await api('/campaigns/categories');
+      const catRoot = document.getElementById('category-filters');
+      catRoot.innerHTML = ['All', ...categories].map((cat) => `
+        <div class="checkbox-row">
+          <input type="radio" name="cat" id="cat-${cat}" value="${cat}" ${cat === 'All' ? 'checked' : ''}>
+          <label for="cat-${cat}">${cat}</label>
+        </div>
+      `).join('');
+      catRoot.querySelectorAll('input[name="cat"]').forEach((input) => {
+        input.addEventListener('change', () => { state.category = input.value; state.page = 1; loadCampaigns(); });
+      });
+
+      const provSelect = document.getElementById('province-select');
+      provinces.forEach((p) => {
+        const opt = document.createElement('option');
+        opt.value = p; opt.textContent = p;
+        provSelect.appendChild(opt);
+      });
+    } catch (err) { /* non-fatal */ }
+  }
+
+  async function loadCampaigns() {
+    const grid = document.getElementById('campaign-grid');
+    grid.innerHTML = `<div class="skeleton" style="height:320px;"></div><div class="skeleton" style="height:320px;"></div><div class="skeleton" style="height:320px;"></div>`;
+    try {
+      const params = new URLSearchParams({
+        category: state.category, province: state.province, sort: state.sort, maxGoal: state.maxGoal
+      });
+      if (state.search) params.set('search', state.search);
+      const { campaigns, total } = await api(`/campaigns?${params.toString()}`);
+
+      document.getElementById('results-count').textContent = `${total} Campaigns Found`;
+
+      const start = (state.page - 1) * PAGE_SIZE;
+      const pageItems = campaigns.slice(start, start + PAGE_SIZE);
+
+      if (!pageItems.length) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">No campaigns match your filters. Try clearing them.</div>`;
+        document.getElementById('pagination').innerHTML = '';
+        return;
+      }
+      grid.innerHTML = pageItems.map(campaignCardHtml).join('');
+      renderPagination(total);
+    } catch (err) {
+      grid.innerHTML = `<div class="alert alert-error" style="grid-column:1/-1;">Couldn't load campaigns: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  function renderPagination(total) {
+    const pageCount = Math.max(Math.ceil(total / PAGE_SIZE), 1);
+    const root = document.getElementById('pagination');
+    if (pageCount <= 1) { root.innerHTML = ''; return; }
+    let html = '';
+    for (let i = 1; i <= pageCount; i++) {
+      html += `<button class="page-btn ${i === state.page ? 'active' : ''}" data-page="${i}">${i}</button>`;
+    }
+    root.innerHTML = html;
+    root.querySelectorAll('.page-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.page = Number(btn.dataset.page);
+        loadCampaigns();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  }
+
+  document.getElementById('province-select').addEventListener('change', (e) => {
+    state.province = e.target.value; state.page = 1; loadCampaigns();
+  });
+  document.getElementById('sort-select').addEventListener('change', (e) => {
+    state.sort = e.target.value; state.page = 1; loadCampaigns();
+  });
+  document.getElementById('goal-range').addEventListener('change', (e) => {
+    state.maxGoal = e.target.value; state.page = 1; loadCampaigns();
+  });
+  document.getElementById('clear-filters').addEventListener('click', () => {
+    state = { category: 'All', province: 'All', sort: 'trending', maxGoal: 500000, search: '', page: 1 };
+    document.getElementById('province-select').value = 'All';
+    document.getElementById('sort-select').value = 'trending';
+    document.getElementById('goal-range').value = 500000;
+    const allRadio = document.getElementById('cat-All');
+    if (allRadio) allRadio.checked = true;
+    loadCampaigns();
+  });
+
+  loadFilters();
+  loadCampaigns();
+</script>
+<style>
+.filter-select { width:100%; padding: 10px 12px; border-radius: var(--radius); border: 1.5px solid var(--surface-container-high); background: var(--surface-container-lowest); color: var(--on-surface); }
+</style>
+</body>
+</html>

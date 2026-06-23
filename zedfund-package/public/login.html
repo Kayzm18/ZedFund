@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In — ZedFund</title>
+<link rel="icon" href="images/logo.png">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div id="navbar-root"></div>
+
+<main class="auth-wrap">
+  <div class="card auth-card">
+    <a href="index.html" class="logo"><img src="images/logo.png" alt="ZedFund logo">ZedFund</a>
+    <h1 class="headline-lg" style="text-align:center; margin-bottom:6px;">Welcome back</h1>
+    <p class="body-md text-muted" style="text-align:center; margin-bottom: var(--space-md);">Log in to donate, manage campaigns, or withdraw funds.</p>
+
+    <div id="form-alert"></div>
+
+    <form id="login-form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="password">Password</label><input type="password" id="password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Log In</button>
+    </form>
+
+    <p class="auth-switch">Don't have an account? <a href="signup.html" class="text-primary" style="font-weight:600;">Sign up</a></p>
+
+    <div class="demo-accounts">
+      <strong>Demo accounts</strong> (password: <code>password123</code>)<br>
+      Admin: <code>admin@zedfund.zm</code><br>
+      Organizer: <code>mwansa@example.com</code><br>
+      Donor: <code>demo@zedfund.zm</code>
+    </div>
+  </div>
+</main>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script>
+  renderNavbar();
+
+  if (isLoggedIn()) window.location.href = 'dashboard.html';
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const alertBox = document.getElementById('form-alert');
+    const btn = document.getElementById('submit-btn');
+    alertBox.innerHTML = '';
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const res = await api('/auth/login', {
+        method: 'POST',
+        body: { email: document.getElementById('email').value.trim(), password: document.getElementById('password').value }
+      });
+      setAuth(res.token, res.user);
+      window.location.href = res.user.role === 'admin' ? 'admin.html' : 'dashboard.html';
+    } catch (err) {
+      alertBox.innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+      btn.disabled = false;
+      btn.innerHTML = 'Log In';
+    }
+  });
+</script>
+</body>
+</html>
