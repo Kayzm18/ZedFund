@@ -5,6 +5,5 @@ npm install
 ```
 ### Step 1 — Run web app
 ```bash
-cd zedfund-package
 npm start
 ```
