@@ -1,6 +1,7 @@
 const express = require('express');
 const { readDB, writeDB, genId } = require('../db');
 const { optionalAuth } = require('../middleware/auth');
+const smsService = require('../services/smsService');
 
 const router = express.Router();
 
@@ -10,8 +11,8 @@ function maskPhone(phone) {
   return phone.slice(0, 4) + '*'.repeat(Math.max(phone.length - 4, 0));
 }
 
-// Step 1: initiate a donation -> creates a "pending" record simulating a push to the phone
-router.post('/initiate', optionalAuth, (req, res) => {
+// Step 1: initiate a donation -> creates a "pending" record and sends a real SMS payment request
+router.post('/initiate', optionalAuth, async (req, res) => {
   const { campaignId, amount, provider, phone, donorName, anonymous } = req.body || {};
 
   if (!campaignId || !amount || !provider || !phone) {
@@ -45,32 +46,34 @@ router.post('/initiate', optionalAuth, (req, res) => {
   db.donations.push(donation);
   writeDB(db);
 
+  try {
+    const { ref } = await smsService.sendPaymentRequest({
+      toPhoneE164: '+260' + phone.slice(1), // convert 0977... -> +260977...
+      amount: Number(amount),
+      campaignName: campaign.title || campaign.name,
+      donationId: donation.id,
+    });
+    donation.smsRef = ref;
+    writeDB(db);
+  } catch (err) {
+    donation.status = 'failed';
+    writeDB(db);
+    console.error('SMS send failed:', err.message);
+    return res.status(502).json({ error: 'Could not send payment request SMS.' });
+  }
+
   res.status(201).json({
     donationId: donation.id,
     providerName: PROVIDER_NAMES[provider],
-    message: `A payment request for K${Number(amount).toLocaleString()} has been sent to ${maskPhone(phone)} via ${PROVIDER_NAMES[provider]}. Enter your PIN on your phone to approve.`
+    message: `A payment request for K${Number(amount).toLocaleString()} has been sent via SMS. Reply YES to confirm.`
   });
 });
 
-// Step 2: confirm the donation -> simulates the user approving the USSD prompt on their phone
+// Step 2: check status -> real confirmation comes in via the SMS reply webhook
 router.post('/:id/confirm', (req, res) => {
   const db = readDB();
   const donation = db.donations.find((d) => d.id === req.params.id);
   if (!donation) return res.status(404).json({ error: 'Donation not found.' });
-  if (donation.status !== 'pending') {
-    return res.json({ donation });
-  }
-
-  // Simulated network: ~92% approval rate, mirrors a real mobile money push success rate
-  const approved = Math.random() < 0.92;
-  donation.status = approved ? 'success' : 'failed';
-
-  if (approved) {
-    const campaign = db.campaigns.find((c) => c.id === donation.campaignId);
-    if (campaign) campaign.raised += donation.amount;
-  }
-
-  writeDB(db);
   res.json({ donation });
 });
 

@@ -18,6 +18,7 @@ app.use('/api/campaigns', campaignRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/webhooks', require('./routes/webhooks'));
 
 app.use((req, res, next) => {
   if (req.path.startsWith('/api/')) {
